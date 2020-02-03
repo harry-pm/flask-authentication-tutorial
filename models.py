@@ -51,13 +51,13 @@ class RevokedTokenModel(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     jti = db.Column(db.String(120))#unique identifier of token
 
-#adds token to db
-def add(self):
-    db.session.add(self)
-    db.session.commit()
+    #adds token to db
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
 
-#checks if token is revoked
-@classmethod
-def is_jti_blacklisted(cls, jti):
-    query = cls.query.filter_by(jti = jti).first()
-    return bool(query)
+    #checks if token is revoked
+    @classmethod
+    def is_jti_blacklisted(cls, jti):
+        query = cls.query.filter_by(jti = jti).first()
+        return bool(query)
