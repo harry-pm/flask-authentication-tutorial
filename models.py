@@ -1,5 +1,5 @@
 from run import db
-from passlib.hash import pbkdf2_sha256 as sha256
+from passlib.hash import pbkdf2_sha256 as sha256 #encodes passwords
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -12,6 +12,7 @@ class UserModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    #if username exists in db, it will return username
     @classmethod
     def find_by_username(cls, username):
         return cls.query.filter_by(username = username).first()
@@ -33,10 +34,13 @@ class UserModel(db.Model):
             return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
         except:
             return {'message': 'Something went wrong'}
-    
+
+    #generate a hashed string
     @staticmethod
     def generate_hash(password):
         return sha256.hash(password)
+    
+    # will check the given password.
     @staticmethod
     def verify_hash(password, hash):
         return sha256.verify(password, hash)
