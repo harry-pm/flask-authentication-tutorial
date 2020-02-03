@@ -55,15 +55,29 @@ class UserLogin(Resource):
         else:
             return {'message': 'Wrong credentials'}
       
-      
 class UserLogoutAccess(Resource):
+# extract the unique identifier from the passed token and add it to the database of revoked tokens.      
+    @jwt_required
     def post(self):
-        return {'message': 'User logout'}
-      
+        jti = get_raw_jwt()['jti']
+        try:
+            revoked_token = RevokedTokenModel(jti = jti)
+            revoked_token.add()
+            return {'message': 'Access token has been revoked'}
+        except:
+            return {'message': 'Something went wrong'}, 500
       
 class UserLogoutRefresh(Resource):
+# extract the unique identifier from the passed token and add it to the database of revoked tokens.    
+    @jwt_refresh_token_required  
     def post(self):
-        return {'message': 'User logout'}
+        jti = get_raw_jwt()['jti']
+        try:
+            revoked_token = RevokedTokenModel(jti = jti)
+            revoked_token.add()
+            return {'message': 'Refresh token has been revoked'}
+        except:
+            return {'message': 'Something went wrong'}, 500
       
       
 class TokenRefresh(Resource):
